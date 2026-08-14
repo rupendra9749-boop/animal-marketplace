@@ -42,6 +42,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'api' => [
+            'driver' => 'jwt',   // ye zaroor check karo
+            'provider' => 'users',
+        ],
     ],
 
     /*
