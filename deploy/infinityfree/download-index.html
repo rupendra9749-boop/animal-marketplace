@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AnimalMandi app</title>
+<meta name="robots" content="noindex">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta name="theme-color" content="#d97706">
+<link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+  :root { --bg:#fafaf9; --card:#fff; --ink:#1c1917; --muted:#57534e; --line:#e7e5e4; --brand:#d97706; --brand-ink:#fff; --soft:#fffbeb; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0c0a09; --card:#1c1917; --ink:#fafaf9; --muted:#a8a29e; --line:#292524; --soft:#292524; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Devanagari", sans-serif; }
+  main { max-width:520px; margin:0 auto; padding:32px 16px 48px; }
+  .logo { width:56px; height:56px; border-radius:16px; background:var(--brand); color:#fff; display:flex; align-items:center; justify-content:center; font-size:28px; }
+  h1 { font-size:26px; margin:16px 0 4px; }
+  h2 { font-size:17px; margin:0 0 6px; }
+  p { margin:0 0 12px; color:var(--muted); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px; margin-top:20px; }
+  .card.best { border-color:var(--brand); }
+  .tag { display:inline-block; font-size:12px; font-weight:700; color:#92400e; background:var(--soft); border-radius:999px; padding:2px 10px; margin-bottom:8px; }
+  .btn { display:block; width:100%; text-align:center; background:var(--brand); color:var(--brand-ink); font:inherit; font-weight:700; text-decoration:none; padding:14px 18px; border:0; border-radius:12px; font-size:17px; cursor:pointer; }
+  .btn.alt { background:transparent; color:var(--brand); border:2px solid var(--brand); }
+  .meta { font-size:13px; color:var(--muted); margin-top:10px; word-break:break-all; }
+  ol { margin:8px 0 0; padding-left:20px; color:var(--muted); }
+  li { margin-bottom:6px; }
+  .hi { color:var(--muted); font-size:14px; margin-top:4px; }
+  a.site { color:var(--brand); font-weight:600; }
+  #how { display:none; margin-top:12px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="logo">🐾</div>
+  <h1>AnimalMandi for Android</h1>
+  <p>Buy and sell animals near you, find animal doctors and caretakers, and check breeding matches. In English and Hindi.</p>
+  <p lang="hi">अपने पास के पशु खरीदें और बेचें, पशु डॉक्टर और केयरटेकर खोजें, प्रजनन मिलान जाँचें। हिन्दी और English में।</p>
+
+  <div class="card best">
+    <span class="tag">No warning &middot; बिना चेतावनी</span>
+    <h2>Install the app</h2>
+    <p>One tap, straight from Chrome. It adds AnimalMandi to your home screen and opens like an app.</p>
+    <p class="hi" lang="hi">Chrome से एक टैप में। AnimalMandi आपके होम स्क्रीन पर आ जाएगा और ऐप की तरह खुलेगा।</p>
+    <button class="btn" id="install" type="button">Install AnimalMandi &middot; इंस्टॉल करें</button>
+    <div id="how">
+      <p>Open this page in <strong>Chrome</strong>, tap the menu <strong>&#8942;</strong> (top right), then <strong>Install app</strong> or <strong>Add to Home screen</strong>.</p>
+      <p lang="hi">इस पेज को <strong>Chrome</strong> में खोलें, ऊपर दाईं ओर मेनू <strong>&#8942;</strong> दबाएँ, फिर <strong>Install app</strong> या <strong>Add to Home screen</strong> चुनें।</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Or download the app file (APK)</h2>
+    <p>Android shows a warning for every app that does not come from Google Play. That is normal for apps installed from a website; it does not mean this file is harmful.</p>
+    <p class="hi" lang="hi">Google Play के बाहर से आने वाले हर ऐप पर Android चेतावनी दिखाता है। यह सामान्य है, इसका मतलब यह नहीं कि फ़ाइल नुकसानदेह है।</p>
+    <a class="btn alt" href="AnimalMandi-1.4.apk" download>Download the app (version 1.4)</a>
+    <div class="meta">Android 7.0 or newer &middot; 2.3 MB<br>SHA-256: 8a76e06e5fce7d738a328d685dbdcfa2150d7588424ff3288c4547891f2f5e65</div>
+    <ol>
+      <li>Tap the button. If Chrome says <em>&ldquo;This type of file can harm your device&rdquo;</em>, tap <strong>OK</strong> / <strong>Download anyway</strong>. <span lang="hi">(Chrome चेतावनी दे तो <strong>OK</strong> दबाएँ।)</span></li>
+      <li>Open the downloaded file. If asked, allow installing from this source (Chrome or Files), then tap <strong>Install</strong>. <span lang="hi">(पूछे तो इस स्रोत से इंस्टॉल की अनुमति दें, फिर <strong>Install</strong> दबाएँ।)</span></li>
+      <li>If Google Play Protect says <em>&ldquo;Harmful app blocked&rdquo;</em> or the app is unknown, tap <strong>More details</strong>, then <strong>Install anyway</strong> if it is shown. It is Google&rsquo;s automatic check reacting to a new app on a new website address; the app only uses the internet and your location. If there is no <strong>Install anyway</strong>, use the <strong>Install the app</strong> button at the top instead. <span lang="hi">(Play Protect &ldquo;Harmful app blocked&rdquo; दिखाए तो <strong>More details</strong> &rarr; <strong>Install anyway</strong>; न दिखे तो ऊपर वाला <strong>Install the app</strong> बटन इस्तेमाल करें।)</span></li>
+    </ol>
+  </div>
+
+  <p style="margin-top:20px">Prefer the browser? Use the website: <a class="site" href="https://animalmandi.wuaze.com/">animalmandi.wuaze.com</a></p>
+</main>
+<script>
+  // "Install the app": Chrome's own install prompt. If Chrome does not offer it (already installed, or another
+  // browser), show where to find it in the menu instead.
+  var deferred = null, btn = document.getElementById('install'), how = document.getElementById('how');
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; });
+  window.addEventListener('appinstalled', function () { btn.textContent = 'Installed ✓'; btn.disabled = true; });
+  btn.addEventListener('click', function () {
+    if (deferred) { deferred.prompt(); deferred.userChoice.then(function () { deferred = null; }); }
+    else { how.style.display = 'block'; }
+  });
+  if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(function () {}); }
+</script>
+</body>
+</html>

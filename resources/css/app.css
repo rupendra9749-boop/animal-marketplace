@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * The rupee sign. In the web font, the rupee glyph has no width at some weights on older Android WebViews, so it is
+ * drawn on top of the next digit (Rs 2,500 shows as Rs ,500). Draw just that one character with the phone's own font.
+ */
+@font-face {
+    font-family: 'Rupee';
+    font-weight: 100 599;
+    src: local('Roboto'), local('Roboto-Regular'), local('Noto Sans'), local('NotoSans-Regular'), local('Segoe UI'), local('Arial');
+    unicode-range: U+20B9;
+}
+@font-face {
+    font-family: 'Rupee';
+    font-weight: 600 900;
+    src: local('Roboto Bold'), local('Roboto-Bold'), local('Noto Sans Bold'), local('NotoSans-Bold'), local('Segoe UI Bold'), local('SegoeUI-Bold'), local('Arial Bold'), local('Arial-BoldMT');
+    unicode-range: U+20B9;
+}
+
+/*
+ * Hindi (Devanagari). The marks above and below the letters need more height than the tight line spacing the
+ * design uses for English headings, and letter-spacing breaks the joined letters apart - so in Hindi both go back
+ * to normal.
+ */
+html[lang='hi'] .leading-none,
+html[lang='hi'] .leading-tight,
+html[lang='hi'] .leading-snug {
+    line-height: 1.45;
+}
+html[lang='hi'] .leading-relaxed {
+    line-height: 1.75;
+}
+html[lang='hi'] [class*='tracking-'] {
+    letter-spacing: 0;
+}
+
+/*
+ * Note on grids: a grid with no grid-cols-* class sizes its single column to its widest content, which pushes
+ * long (truncated) text past the screen edge on phones. Give such grids an explicit "grid-cols-1" in the markup.
+ * (A global ".grid" rule is NOT the answer: Tailwind copies it into lg:grid / md:grid and it then overrides
+ * grid-cols-2 on wide screens.)
+ */
+
+/*
+ * Text boxes on older phones. The forms plugin writes its base styles as input:where([type=text]) and
+ * ":where" does not exist before Chrome 88, so older Android WebViews drop those rules and every text box
+ * loses its border and padding. These plain selectors give them the same base look. They sit in the base
+ * layer, so any utility class on an input (border-stone-300, rounded-xl, ...) still wins.
+ */
+@layer base {
+    [type='text'], [type='email'], [type='url'], [type='password'], [type='number'], [type='date'],
+    [type='datetime-local'], [type='month'], [type='search'], [type='tel'], [type='time'], [type='week'],
+    textarea {
+        -webkit-appearance: none;
+        appearance: none;
+        background-color: #fff;
+        border-width: 1px;
+        border-color: #6b7280;
+        border-radius: 0;
+        padding: 0.5rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    [type='text']:focus, [type='email']:focus, [type='url']:focus, [type='password']:focus, [type='number']:focus,
+    [type='date']:focus, [type='datetime-local']:focus, [type='month']:focus, [type='search']:focus, [type='tel']:focus,
+    [type='time']:focus, [type='week']:focus, textarea:focus {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+        border-color: #2563eb;
+    }
+}
