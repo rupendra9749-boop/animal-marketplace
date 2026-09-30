@@ -1,0 +1,46 @@
+name: Live site health check
+
+# Every 6 hours: is animalmandi.wuaze.com up, are the key pages working, and are the private files still private?
+# A failed run makes GitHub email the repository owner.
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SITE_URL: https://animalmandi.wuaze.com
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check the live site
+        run: |
+          failed=0
+          check() {
+            args=(--expect-status "$2"); [ -n "${3:-}" ] && args+=(--expect-text "$3")
+            if node deploy/ci/hostfetch.mjs "$SITE_URL$1" "${args[@]}" >/dev/null 2>err.txt; then echo "ok    $1 -> $2"; else echo "FAIL  $1 (wanted $2 ${3:-})"; cat err.txt; failed=1; fi
+          }
+          check /up 200 "Application up"
+          check /home 200 "AnimalMandi"
+          check /login 200 "AnimalMandi"
+          check /register 200 "AnimalMandi"
+          check /vets 200 "AnimalMandi"
+          check /caretakers 200 "AnimalMandi"
+          check /breeding 200 "AnimalMandi"
+          check /promo 200 "AnimalMandi"
+          check /privacy 200 "Privacy"
+          check /download/ 200 "AnimalMandi"
+          check /_app/vendor/autoload.php 403
+          check /install.php 404
+          check /unzip.php 404
+          exit $failed

@@ -1,7 +1,9 @@
 <?php
 
-// One-time setup, run over HTTP: creates the database tables and the starting data (animal types + one admin).
-// Delete this file afterwards. Usage: install.php?t=TOKEN
+// Runs over HTTP (the free host has no SSH): applies new database migrations, refreshes the package list and
+// clears the caches. It can NEVER wipe data - there is no "fresh" option any more. The deploy pipeline uploads this
+// file with a one-time token for each deploy and deletes it again afterwards.
+// Usage: install.php?t=TOKEN
 if (! hash_equals('@@TOKEN@@', (string) ($_GET['t'] ?? ''))) {
     http_response_code(404);
     exit;
@@ -22,9 +24,9 @@ $laravel->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
 use Illuminate\Support\Facades\Artisan;
 
-// ?fresh=1 wipes the tables first: only for the very first setup, or to start over from an empty database.
 $steps = [
-    isset($_GET['fresh']) ? ['migrate:fresh', ['--force' => true]] : ['migrate', ['--force' => true]],
+    ['package:discover', []],
+    ['migrate', ['--force' => true]],
     ['db:seed', ['--class' => 'ProductionSeeder', '--force' => true]],
     ['optimize:clear', []],
 ];
@@ -34,6 +36,10 @@ foreach ($steps as [$command, $arguments]) {
     try {
         $code = Artisan::call($command, $arguments);
         echo trim(Artisan::output())."\n(exit code $code)\n\n";
+        if ($code !== 0) {
+            echo "FAILED: $command exited with code $code\n";
+            exit(1);
+        }
     } catch (Throwable $e) {
         echo 'FAILED: '.get_class($e).': '.$e->getMessage()."\n";
         exit(1);

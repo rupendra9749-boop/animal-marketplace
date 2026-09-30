@@ -1,0 +1,99 @@
+name: Test and deploy
+
+# Every push to the animalmandi branch: run the tests, and if they pass, update the live site.
+# Pull requests only run the tests. "Run workflow" on the Actions page deploys the branch by hand.
+on:
+  push:
+    branches: [animalmandi]
+  pull_request:
+    branches: [animalmandi]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, dom, curl, xml, zip, intl, fileinfo, gd, pdo_sqlite, sqlite3
+          tools: composer:v2
+          coverage: none
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install PHP libraries
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Prepare app key
+        run: cp .env.example .env && php artisan key:generate
+
+      - name: Build the styles and scripts (catches build errors)
+        run: npm ci && npm run build
+
+      - name: Run the tests
+        run: php artisan test
+
+  deploy:
+    name: Deploy to animalmandi.wuaze.com
+    needs: test
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/animalmandi'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: production
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    env:
+      FTP_HOST: ftpupload.net
+      SITE_URL: https://animalmandi.wuaze.com
+      FTP_USER: ${{ secrets.FTP_USER }}
+      FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+    steps:
+      - name: Check the deploy secrets exist
+        id: secrets
+        run: |
+          if [ -z "$FTP_USER" ] || [ -z "$FTP_PASSWORD" ]; then
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Deploy skipped::Add the repository secrets FTP_USER and FTP_PASSWORD (Settings > Secrets and variables > Actions). The tests passed."
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.secrets.outputs.ok == 'true'
+
+      - uses: shivammathur/setup-php@v2
+        if: steps.secrets.outputs.ok == 'true'
+        with:
+          php-version: '8.3'
+          extensions: mbstring, dom, curl, xml, zip, intl, fileinfo, gd
+          tools: composer:v2
+          coverage: none
+
+      - uses: actions/setup-node@v4
+        if: steps.secrets.outputs.ok == 'true'
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Production libraries and front-end build
+        if: steps.secrets.outputs.ok == 'true'
+        run: |
+          composer install --no-dev --optimize-autoloader --no-scripts --no-interaction --prefer-dist --no-progress
+          npm ci
+          npm run build
+
+      - name: Deploy and test the live site
+        if: steps.secrets.outputs.ok == 'true'
+        run: bash deploy/ci/deploy.sh
